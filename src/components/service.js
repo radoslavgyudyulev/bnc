@@ -20,5 +20,11 @@ export default {
         return numbers;
       }
     }
+  },
+  saveTheRecordToLS: record => {
+    localStorage.setItem("record", record);
+  },
+  saveTheUserInLS: user => {
+    localStorage.setItem("user", user);
   }
 };

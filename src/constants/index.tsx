@@ -16,3 +16,6 @@ export type SET_ALL_GUESSES = typeof SET_ALL_GUESSES;
 export const RESTART_THE_GAME = 'RESTART_THE_GAME';
 export type RESTART_THE_GAME = typeof RESTART_THE_GAME;
 
+export const ERROR_MESSAGE = 'ERROR_MESSAGE';
+export type ERROR_MESSAGE = typeof ERROR_MESSAGE;
+

@@ -17,7 +17,9 @@ const initialState: StoreState = {
   isUsernameSaved: false,
   userGuess: undefined,
   allGuesses: [],
-  isGameFinished: false
+  isGameFinished: false,
+  errorMessage: "",
+  numberInputValue: ""
 };
 
 /* eslint-disable no-underscore-dangle */

@@ -4,17 +4,24 @@ import * as actions from "../../actions";
 import { StoreState } from "src/types";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
+import service from "../service";
 
 type mapProps = ReturnType<typeof mapStateToProps>;
 type mapDispatch = ReturnType<typeof mapDispatchToProps>;
 
-export type Props = mapProps & mapDispatch;
+type Props = mapProps & mapDispatch;
 
 class Input extends React.Component<Props> {
   restartGame = () => {
     this.props.restartTheGame(false);
     this.props.setAllGuesses([]);
     this.props.generateRandomNumbers();
+    const record = {
+      user: localStorage.getItem("user"),
+      number: this.props.numbers,
+      tries: this.props.allGuesses.length
+    };
+    service.saveTheRecordToLS(JSON.stringify(record));
   };
   render() {
     return (
@@ -30,8 +37,13 @@ class Input extends React.Component<Props> {
   }
 }
 
-function mapStateToProps({ isGameFinished }: StoreState) {
-  return { isGameFinished };
+function mapStateToProps({
+  isGameFinished,
+  username,
+  numbers,
+  allGuesses
+}: StoreState) {
+  return { isGameFinished, username, numbers, allGuesses };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {

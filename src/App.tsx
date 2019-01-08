@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./App.css";
+import "./styles/css/App.css";
 
 import { StoreState } from "./types";
 import { Dispatch } from "redux";
@@ -24,7 +24,13 @@ class App extends React.Component<Props> {
   render() {
     return (
       <div className="App">
-        {this.props.isUsernameSaved ? <Game /> : <UsernameSetter />}
+        {localStorage.getItem("user") ? (
+          <Game />
+        ) : this.props.isUsernameSaved ? (
+          <Game />
+        ) : (
+          <UsernameSetter />
+        )}
       </div>
     );
   }
@@ -38,12 +44,7 @@ function mapStateToProps({ isUsernameSaved }: StoreState) {
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    getUserGuess: (guess: number) => dispatch(actions.getUserGuess(guess)),
-    generateRandomNumbers: () => dispatch(actions.generateRandomNumbers()),
-    setAllGuesses: (allGuesses: []) =>
-      dispatch(actions.setAllGuesses(allGuesses)),
-    restartTheGame: (condition: boolean) =>
-      dispatch(actions.restartTheGame(condition))
+    generateRandomNumbers: () => dispatch(actions.generateRandomNumbers())
   };
 }
 

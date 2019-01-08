@@ -1,42 +1,7 @@
-import * as constants from "../constants";
-
 import service from "../components/service";
 
-export interface SetUsername {
-  type: constants.SET_USERNAME;
-  payload: string;
-}
-
-interface GenerateRandomNumbers {
-  type: constants.GENERATE_RANDOM_NUMBERS;
-  payload: any;
-}
-
-interface SaveTheUser {
-  type: constants.SAVE_THE_USER;
-}
-
-interface GetUserGuess {
-  type: constants.GET_USER_GUESS;
-  payload: number[];
-}
-
-interface SetAllGuesses {
-  type: constants.SET_ALL_GUESSES;
-  payload: [];
-}
-
-interface FinishTheGame {
-  type: constants.RESTART_THE_GAME;
-  payload: boolean;
-}
-
-export type ActionsProps = SetUsername &
-  GenerateRandomNumbers &
-  SaveTheUser &
-  GetUserGuess &
-  SetAllGuesses &
-  FinishTheGame;
+import * as constants from "../constants";
+import { GenerateRandomNumbers, SetUsername, SaveTheUser, GetUserGuess, SetAllGuesses, FinishTheGame, ErrorMessage } from './IActions';
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
@@ -48,6 +13,7 @@ export function generateRandomNumbers(): GenerateRandomNumbers {
 }
 
 export function setUsername(username: string): SetUsername {
+  service.saveTheUserInLS(username);
   return {
     type: constants.SET_USERNAME,
     payload: username
@@ -69,7 +35,8 @@ export function getUserGuess(guess: number): GetUserGuess {
   }
   return {
     type: constants.GET_USER_GUESS,
-    payload: output
+    payload: output,
+    value: guess
   };
 }
 
@@ -84,5 +51,12 @@ export function restartTheGame(condition: boolean): FinishTheGame {
   return {
     type: constants.RESTART_THE_GAME,
     payload: condition
+  };
+}
+
+export function setErrorMessage(msg: string): ErrorMessage {
+  return {
+    type: constants.ERROR_MESSAGE,
+    payload: msg
   };
 }

@@ -9,11 +9,13 @@ import { connect } from "react-redux";
 type mapProps = ReturnType<typeof mapStateToProps>;
 type mapDispatch = ReturnType<typeof mapDispatchToProps>;
 
-export type Props = mapProps & mapDispatch;
+type Props = mapProps & mapDispatch;
 
 class Input extends React.Component<Props> {
   getUserGuess = (event: any) => {
-    this.props.getUserGuess(event.target.value);
+    if (/^\d+$/.test(event.target.value) && event.target.value.length < 5) {
+      this.props.getUserGuess(event.target.value);
+    }
   };
 
   calculateCnB = () => {
@@ -25,7 +27,7 @@ class Input extends React.Component<Props> {
       allGuesses
     } = this.props;
     const checker = service.calculateCnB(numbers, userGuess);
-    const allGuessesCopy = allGuesses;
+    const allGuessesCopy: any = allGuesses;
     const data = {
       guess: userGuess,
       checker
@@ -41,23 +43,45 @@ class Input extends React.Component<Props> {
 
   handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
-      this.calculateCnB();
-      event.target.value = "";
-      this.props.getUserGuess(event.target.value);
+      if (this.props.userGuess) {
+        if (this.props.userGuess.length === 4) {
+          this.calculateCnB();
+          event.target.value = "";
+          this.props.getUserGuess(event.target.value);
+        }
+      }
     }
   };
 
   render() {
     return (
-      <input
-        onChange={this.getUserGuess}
-        min={4}
-        max={4}
-        pattern="[0-9]{4}"
-        type="text"
-        onKeyPress={this.handleKeyPress}
-        disabled={this.props.isGameFinished}
-      />
+      <div className="number-input-wrapper">
+        <input
+          onChange={this.getUserGuess}
+          min={4}
+          max={4}
+          pattern="[0-9]{4}"
+          type="text"
+          value={this.props.numberInputValue}
+          onKeyPress={this.handleKeyPress}
+          disabled={this.props.isGameFinished}
+        />
+        <ul>
+          {this.props.allGuesses.map((g: any, i: number) => {
+            return (
+              <li key={g.guess}>
+                Try #{i + 1} - NUMBER -
+                {g.guess.map((n: number) => {
+                  return n;
+                })}
+                <img src="bull.png" alt="BULL" />
+                {g.checker.bulls} <img src="cow.png" alt="COW" />
+                {g.checker.cows}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     );
   }
 }
@@ -66,9 +90,10 @@ function mapStateToProps({
   numbers,
   userGuess,
   allGuesses,
-  isGameFinished
+  isGameFinished,
+  numberInputValue
 }: StoreState) {
-  return { numbers, userGuess, allGuesses, isGameFinished };
+  return { numbers, userGuess, allGuesses, isGameFinished, numberInputValue };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
@@ -77,7 +102,8 @@ function mapDispatchToProps(dispatch: Dispatch) {
       dispatch(actions.restartTheGame(condition)),
     saveTheUser: () => dispatch(actions.saveTheUser()),
     setAllGuesses: (guesses: []) => dispatch(actions.setAllGuesses(guesses)),
-    getUserGuess: (guess: number) => dispatch(actions.getUserGuess(guess))
+    getUserGuess: (guess: number) => dispatch(actions.getUserGuess(guess)),
+    setErrorMessage: (msg: string) => dispatch(actions.setErrorMessage(msg))
   };
 }
 

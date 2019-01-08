@@ -55,32 +55,46 @@ class Input extends React.Component<Props> {
 
   render() {
     return (
-      <div className="number-input-wrapper">
+      <div>
         <input
+          className="number-input-wrapper"
+          type="text"
           onChange={this.getUserGuess}
           min={4}
           max={4}
           pattern="[0-9]{4}"
-          type="text"
           value={this.props.numberInputValue}
           onKeyPress={this.handleKeyPress}
           disabled={this.props.isGameFinished}
         />
-        <ul>
-          {this.props.allGuesses.map((g: any, i: number) => {
-            return (
-              <li key={g.guess}>
-                Try #{i + 1} - NUMBER -
-                {g.guess.map((n: number) => {
-                  return n;
-                })}
-                <img src="bull.png" alt="BULL" />
-                {g.checker.bulls} <img src="cow.png" alt="COW" />
-                {g.checker.cows}
+        <div className="results-wrapper">
+          <ul>
+            {this.props.allGuesses.length > 0 ? (
+              this.props.allGuesses.map((g: any, i: number) => {
+                return (
+                  <li key={g.guess}>
+                    <strong className="index">{i + 1}</strong>{" "}
+                    <strong className="numbers">
+                      {g.guess.map((n: number) => {
+                        return n;
+                      })}
+                    </strong>
+                    <img src="bull.png" alt="BULL" />
+                    <strong className="count">{g.checker.bulls}</strong>
+                    <img src="cow.png" alt="COW" />
+                    <strong className="count">{g.checker.cows}</strong>
+                  </li>
+                );
+              })
+            ) : (
+              <li>
+                <strong className="numbers">
+                  Hey {localStorage.getItem("user")} try to guess the number
+                </strong>
               </li>
-            );
-          })}
-        </ul>
+            )}
+          </ul>
+        </div>
       </div>
     );
   }
@@ -91,9 +105,17 @@ function mapStateToProps({
   userGuess,
   allGuesses,
   isGameFinished,
-  numberInputValue
+  numberInputValue,
+  username
 }: StoreState) {
-  return { numbers, userGuess, allGuesses, isGameFinished, numberInputValue };
+  return {
+    numbers,
+    userGuess,
+    allGuesses,
+    isGameFinished,
+    numberInputValue,
+    username
+  };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {

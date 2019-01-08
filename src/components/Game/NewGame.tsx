@@ -17,7 +17,7 @@ class Input extends React.Component<Props> {
     this.props.setAllGuesses([]);
     this.props.generateRandomNumbers();
     const record = {
-      user: localStorage.getItem("user"),
+      user: localStorage.getItem("user") || this.props.username,
       number: this.props.numbers,
       tries: this.props.allGuesses.length
     };

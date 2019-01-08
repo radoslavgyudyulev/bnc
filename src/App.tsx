@@ -8,7 +8,6 @@ import * as actions from "./actions";
 import { connect } from "react-redux";
 
 import Game from "./components/Game/Game";
-
 import UsernameSetter from "./components/UsernameSetter";
 
 type mapProps = ReturnType<typeof mapStateToProps>;
